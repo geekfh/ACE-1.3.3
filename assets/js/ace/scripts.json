@@ -1,0 +1,33 @@
+{
+ "elements.scroller.js" : true,
+ "elements.colorpicker.js" : true,
+ "elements.fileinput.js" : true,
+ "elements.typeahead.js" : true,
+ "elements.wysiwyg.js" : true,
+ "elements.spinner.js" : true,
+ "elements.treeview.js" : true,
+ "elements.wizard.js" : true,
+ "elements.aside.js" : true,
+
+ "ace.js" : true,
+ "ace.ajax-content.js" : true,
+ "ace.touch-drag.js" : true,
+ 
+ "ace.sidebar.js" : true,
+ "ace.sidebar-scroll-1.js" : true,
+ "ace.submenu-hover.js" : true,
+
+ "ace.widget-box.js" : true,
+ 
+ "ace.settings.js" : false,
+ "ace.settings-rtl.js" : false,
+ "ace.settings-skin.js" : false,
+
+ "ace.widget-on-reload.js" : false,
+ "ace.searchbox-autocomplete.js" : false,
+
+ "ace.auto-padding.js" : false,
+ "ace.auto-container.js" : false,
+ 
+ "ace.onReady.js" : true
+}
