@@ -4,7 +4,7 @@
 
 module.exports = function (grunt) {
   grunt.util.linefeed = '\n';
-  
+
   var fs = require('fs');
   var path = require('path');
   var generateRTL = require('./build/rtl.js');
@@ -139,16 +139,16 @@ module.exports = function (grunt) {
 	
 	exec: {
 	  html: {
-        command: 'node mustache/js/index.js --output_folder="../../../html" --onpage_help=true --development=true'
+        command: 'node mustache/js/index.js --output_folder="../../html" --onpage_help=true --development=true'
       },
 	  html_ajax: {
-        command: 'node mustache/js/ajax.js --output_folder="../../../html" --onpage_help=true --development=true'
+        command: 'node mustache/js/ajax.js --output_folder="../../html" --onpage_help=true --development=true'
       },
       demo: {
-        command: 'node mustache/js/index.js --output_folder="../../../demo" --path_minified="\\.min" --path_base="." --path_assets="dist" --path_images="dist/images" --demo=true --onpage_help=false --development=false --protocol=false --remote_jquery=true --remote_fonts=true --remote_bootstrap_js=true --remote_fontawesome=true'
+        command: 'node mustache/js/index.js --output_folder="../../demo" --path_minified="\\.min" --path_base="." --path_assets="dist" --path_images="dist/images" --demo=true --onpage_help=false --development=false --protocol=false --remote_jquery=true --remote_fonts=true --remote_bootstrap_js=true --remote_fontawesome=true'
       },
 	  demo_ajax: {
-        command: 'node mustache/js/ajax.js --output_folder="../../../demo" --path_minified="\\.min" --path_base=".../" --path_assets=".../dist" --path_images=".../dist/images" --demo=true --onpage_help=false --development=false --protocol=false --remote_jquery=true --remote_fonts=true --remote_bootstrap_js=true --remote_fontawesome=true'
+        command: 'node mustache/js/ajax.js --output_folder="../../demo" --path_minified="\\.min" --path_base=".../" --path_assets=".../dist" --path_images=".../dist/images" --demo=true --onpage_help=false --development=false --protocol=false --remote_jquery=true --remote_fonts=true --remote_bootstrap_js=true --remote_fontawesome=true'
       }
     },
 	
@@ -195,12 +195,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-compress');
-  grunt.loadNpmTasks('grunt-banner');
   grunt.loadNpmTasks('grunt-exec');
 
 
   grunt.registerTask('make-rtl', 'Generate RTL file.', function () {
-    generateRTL(grunt);
+    //generateRTL(grunt);
   });
   grunt.registerTask('fix-ie', 'Fix IE9- CSS limit issue.', function () {
     //fixIE(grunt);
@@ -213,11 +212,17 @@ module.exports = function (grunt) {
     for(var f = 0 ; f < files.length ; f++) if(fs.existsSync(files[f])) fs.unlinkSync(files[f]);
   });
 
+
+  
   //register tasks
   grunt.registerTask('demo', ['exec:demo', 'exec:demo_ajax', 'compress:demo']);//build demo HTML and make zip file
+
   grunt.registerTask('mustache', ['exec:html', 'exec:html_ajax']);//build HTML files
+  
   grunt.registerTask('css', ['less', 'make-rtl', 'fix-ie', 'cssmin:ace', 'cleanup']);//build Ace CSS
   grunt.registerTask('css-all', ['less', 'make-rtl', 'fix-ie', 'cssmin:all', 'cleanup']);//build all CSS
+
   grunt.registerTask('default', ['concat', 'uglify:ace', 'css', 'copy']);//build Ace files
-  grunt.registerTask('rebuild', ['clean:all', 'concat', 'uglify:all', 'css-all', 'copy', 'mustache']);//all files 
+
+  grunt.registerTask('rebuild', ['clean:all', 'concat', 'uglify:all', 'css-all', 'copy', 'mustache']);//all files
 };
