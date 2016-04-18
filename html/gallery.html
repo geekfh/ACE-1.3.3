@@ -1350,43 +1350,47 @@
 		<script src="../assets/js/ace/ace.sidebar-scroll-1.js"></script>
 		<script src="../assets/js/ace/ace.submenu-hover.js"></script>
 		<script src="../assets/js/ace/ace.widget-box.js"></script>
-		<script src="../assets/js/ace/ace.onReady.js"></script>
+		<script src="../assets/js/ace/ace.settings.js"></script>
+		<script src="../assets/js/ace/ace.settings-rtl.js"></script>
+		<script src="../assets/js/ace/ace.settings-skin.js"></script>
+		<script src="../assets/js/ace/ace.widget-on-reload.js"></script>
+		<script src="../assets/js/ace/ace.searchbox-autocomplete.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 			jQuery(function($) {
-				var $overflow = '';
-				var colorbox_params = {
-					rel: 'colorbox',
-					reposition:true,
-					scalePhotos:true,
-					scrolling:false,
-					previous:'<i class="ace-icon fa fa-arrow-left"></i>',
-					next:'<i class="ace-icon fa fa-arrow-right"></i>',
-					close:'&times;',
-					current:'{current} of {total}',
-					maxWidth:'100%',
-					maxHeight:'100%',
-					onOpen:function(){
-						$overflow = document.body.style.overflow;
-						document.body.style.overflow = 'hidden';
-					},
-					onClosed:function(){
-						document.body.style.overflow = $overflow;
-					},
-					onComplete:function(){
-						$.colorbox.resize();
-					}
-				};
-			
-				$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-				$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
-				
-				
-				$(document).one('ajaxloadstart.page', function(e) {
-					$('#colorbox, #cboxOverlay').remove();
-			   });
-			})
+	var $overflow = '';
+	var colorbox_params = {
+		rel: 'colorbox',
+		reposition:true,
+		scalePhotos:true,
+		scrolling:false,
+		previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+		next:'<i class="ace-icon fa fa-arrow-right"></i>',
+		close:'&times;',
+		current:'{current} of {total}',
+		maxWidth:'100%',
+		maxHeight:'100%',
+		onOpen:function(){
+			$overflow = document.body.style.overflow;
+			document.body.style.overflow = 'hidden';
+		},
+		onClosed:function(){
+			document.body.style.overflow = $overflow;
+		},
+		onComplete:function(){
+			$.colorbox.resize();
+		}
+	};
+
+	$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+	$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+	
+	
+	$(document).one('ajaxloadstart.page', function(e) {
+		$('#colorbox, #cboxOverlay').remove();
+   });
+})
 		</script>
 
 		<!-- the following scripts are used in demo only for onpage help and you don't need them -->

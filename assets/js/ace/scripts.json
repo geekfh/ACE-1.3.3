@@ -19,15 +19,13 @@
 
  "ace.widget-box.js" : true,
  
- "ace.settings.js" : false,
- "ace.settings-rtl.js" : false,
- "ace.settings-skin.js" : false,
+ "ace.settings.js" : true,
+ "ace.settings-rtl.js" : true,
+ "ace.settings-skin.js" : true,
 
- "ace.widget-on-reload.js" : false,
- "ace.searchbox-autocomplete.js" : false,
+ "ace.widget-on-reload.js" : true,
+ "ace.searchbox-autocomplete.js" : true,
 
  "ace.auto-padding.js" : false,
- "ace.auto-container.js" : false,
- 
- "ace.onReady.js" : true
+ "ace.auto-container.js" : false
 }
