@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "build ace html files using Hogan.js",
   "dependencies": {
-	"hogan.js": "",
-	"htmlparser2": "",
-	"require-csv": "",
-	"argh": "",
-	"xtend": ""
+	"hogan.js": "~3.0.2",
+	"htmlparser2": "~3.9.0",
+	"require-csv": "~0.0.1",
+	"argh": "~0.1.4",
+	"xtend": "~4.0.0"
   }
 }

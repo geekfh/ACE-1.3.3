@@ -2,7 +2,7 @@
 	"name": "ace-build-helpers",
 	"version": "0.0.1",
 	"dependencies": {
-		"less": "",
-		"argh": ""
+		"less": "~2.6.0",
+		"argh": "~0.1.4"
 	}
 }
