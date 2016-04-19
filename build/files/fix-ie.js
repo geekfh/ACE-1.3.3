@@ -98,6 +98,8 @@ function breakCSS(less, css_input, callback) {
 }
 
 
+
+
 //for LESS v1.x (using grunt)
 function breakCSS2(less_parser, css_input, callback) {
  if(!less_parser) {
@@ -106,7 +108,6 @@ function breakCSS2(less_parser, css_input, callback) {
  }
  
  less_parser.parse(css_input, function(e, tree) {
- 
 	if(e) {
 		callback.call(null, false);
 		console.log(e);
@@ -136,7 +137,8 @@ function breakCSS2(less_parser, css_input, callback) {
 		}
 		if(totalSelectors > ie_limit) break;
 	}
-		
+	
+	
 	var css_part2 = false;
 	if(totalSelectors > ie_limit) {
 		css_part2 = css_input.substring(lastIndex , css_input.length);
@@ -152,7 +154,7 @@ function breakCSS2(less_parser, css_input, callback) {
 if(typeof module !== 'undefined') {
  var fs = require('fs');
  var vm = require('vm');
- var less = require('less'); 
+ var less = require('less');
  less_parser = new(less.Parser)({
     processImports: false
  });
