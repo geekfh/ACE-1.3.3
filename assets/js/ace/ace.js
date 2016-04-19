@@ -37,31 +37,111 @@
 })(jQuery);
 
 
+//some ace helper functions
+(function($$ , undefined) {//$$ is ace.helper
+ $$.unCamelCase = function(str) {
+	return str.replace(/([a-z])([A-Z])/g, function(match, c1, c2){ return c1+'-'+c2.toLowerCase() })
+ }
+ $$.strToVal = function(str) {
+	var res = str.match(/^(?:(true)|(false)|(null)|(\-?[\d]+(?:\.[\d]+)?)|(\[.*\]|\{.*\}))$/i);
+
+	var val = str;
+	if(res) {
+		if(res[1]) val = true;
+		else if(res[2]) val = false;
+		else if(res[3]) val = null;	
+		else if(res[4]) val = parseFloat(str);
+		else if(res[5]) {
+			try { val = JSON.parse(str) }
+			catch (err) {}
+		}
+	}
+
+	return val;
+ }
+ $$.getAttrSettings = function(el, attr_list, prefix) {
+	var list_type = attr_list instanceof Array ? 1 : 2;
+	//attr_list can be Array or Object(key/value)
+	var prefix = prefix ? prefix.replace(/([^\-])$/ , '$1-') : '';
+	prefix = 'data-' + prefix;
+
+	var settings = {}
+	for(var li in attr_list) if(attr_list.hasOwnProperty(li)) {
+		var name = list_type == 1 ? attr_list[li] : li;
+		var attr_val, attr_name = $$.unCamelCase(name.replace(/[^A-Za-z0-9]{1,}/g , '-')).toLowerCase()
+
+		if( ! ((attr_val = el.getAttribute(prefix + attr_name))  ) ) continue;
+		settings[name] = $$.strToVal(attr_val);
+	}
+
+	return settings;
+ }
+
+ $$.scrollTop = function() {
+	return document.scrollTop || document.documentElement.scrollTop || document.body.scrollTop
+ }
+ $$.winHeight = function() {
+	return window.innerHeight || document.documentElement.clientHeight;
+ }
+ $$.redraw = function(elem, force) {
+	var saved_val = elem.style['display'];
+	elem.style.display = 'none';
+	elem.offsetHeight;
+	if(force !== true) {
+		elem.style.display = saved_val;
+	}
+	else {
+		//force redraw for example in old IE
+		setTimeout(function() {
+			elem.style.display = saved_val;
+		}, 10);
+	}
+ }
+})(ace.helper);
 
 
 //document ready function
-jQuery(function($) {
-	basics();
-	enableSidebar();
+//改造成requirejs模块
+(function(factory) {
+
+  // Set up Ace appropriately for the environment. Start with AMD.
+  if (typeof define === 'function' && define.amd) {
+    define("ace.onReady", ['jquery', 'exports'], function($, exports) {
+		factory($, exports);
+	});
+
+  // Finally, as a browser global.
+  } else {
+    var _aceReady = factory(jQuery, {});
 	
-	enableDemoAjax();
-	handleScrollbars();
-	
-	dropdownAutoPos();
-	
-	navbarHelpers();
-	sidebarTooltips();
-	
-	scrollTopBtn();
-	
-	someBrowserFix();
-	
-	bsCollapseToggle();
-	smallDeviceDropdowns();
-	
+	jQuery(function() {
+		_aceReady.basics();
+		
+		_aceReady.enableSidebar();
+		
+		_aceReady.enableDemoAjax();
+		_aceReady.handleScrollbars();
+		
+		_aceReady.dropdownAutoPos();
+		
+		_aceReady.navbarHelpers();
+		_aceReady.sidebarTooltips();
+		
+		_aceReady.scrollTopBtn();
+		
+		_aceReady.someBrowserFix();
+		
+		_aceReady.bsCollapseToggle();
+		_aceReady.smallDeviceDropdowns();
+	});
+
+  }
+
+}(function($, aceReady) {
+
 	////////////////////////////
 
-	function basics() {
+	aceReady.basics = function() {
 		// for android and ios we don't use "top:auto" when breadcrumbs is fixed
 		if(ace.vars['non_auto_fixed']) {
 			$('body').addClass('mob-safari');
@@ -70,7 +150,7 @@ jQuery(function($) {
 		ace.vars['transition'] = !!$.support.transition.end
 	}
 	
-	function enableSidebar() {
+	aceReady.enableSidebar = function() {
 		//initiate sidebar function
 		var $sidebar = $('.sidebar');
 		if($.fn.ace_sidebar) $sidebar.ace_sidebar();
@@ -86,7 +166,7 @@ jQuery(function($) {
 
 	
 	//Load content via ajax
-	function enableDemoAjax() {		
+	aceReady.enableDemoAjax = function() {		
 		if(!$.fn.ace_ajax) return;
  
 		if(window.Pace) {
@@ -142,7 +222,7 @@ jQuery(function($) {
 
 	/////////////////////////////
 
-	function handleScrollbars() {
+	aceReady.handleScrollbars = function handleScrollbars() {
 		//add scrollbars for navbar dropdowns
 		var has_scroll = !!$.fn.ace_scroll;
 		if(has_scroll) $('.dropdown-content').ace_scroll({reset: false, mouseWheelLock: true})
@@ -159,7 +239,7 @@ jQuery(function($) {
 	}
 
 
-	function dropdownAutoPos() {
+	aceReady.dropdownAutoPos = function() {
 		//change a dropdown to "dropup" depending on its position
 		$(document).on('click.dropdown.pos', '.dropdown-toggle[data-position="auto"]', function() {
 			var offset = $(this).offset();
@@ -174,7 +254,7 @@ jQuery(function($) {
 	}
 
 	
-	function navbarHelpers() {
+	aceReady.navbarHelpers = function() {
 		//prevent dropdowns from hiding when a from is clicked
 		/**$(document).on('click', '.dropdown-navbar form', function(e){
 			e.stopPropagation();
@@ -203,7 +283,7 @@ jQuery(function($) {
 	}
 
 	
-	function sidebarTooltips() {
+	aceReady.sidebarTooltips = function() {
 		//tooltip in sidebar items
 		$('.sidebar .nav-list .badge[title],.sidebar .nav-list .badge[title]').each(function() {
 			var tooltip_class = $(this).attr('class').match(/tooltip\-(?:\w+)/);
@@ -238,7 +318,7 @@ jQuery(function($) {
 	
 	
 
-	function scrollTopBtn() {
+	aceReady.scrollTopBtn = function() {
 		//the scroll to top button
 		var scroll_btn = $('.btn-scroll-up');
 		if(scroll_btn.length > 0) {
@@ -270,7 +350,7 @@ jQuery(function($) {
 
 
 	
-	function someBrowserFix() {
+	aceReady.someBrowserFix = function() {
 		//chrome and webkit have a problem here when resizing from 479px to more
 		//we should force them redraw the navbar!
 		if( ace.vars['webkit'] ) {
@@ -303,7 +383,7 @@ jQuery(function($) {
 
 	
 	
-	function bsCollapseToggle() {
+	aceReady.bsCollapseToggle = function() {
 		//bootstrap collapse component icon toggle
 		$(document).on('hide.bs.collapse show.bs.collapse', function (ev) {
 			var panel_id = ev.target.getAttribute('id')
@@ -339,7 +419,7 @@ jQuery(function($) {
 
 	
 	//in small devices display navbar dropdowns like modal boxes
-	function smallDeviceDropdowns() {
+	aceReady.smallDeviceDropdowns = function() {
 	  if(ace.vars['old_ie']) return;
 	  
 	  $('.ace-nav > li')
@@ -465,71 +545,7 @@ jQuery(function($) {
 		$(this).closest('.navbar').css('z-index', '');
 	  }
 	}
-
-});//jQuery document ready
-
-
-
-
-
-//some ace helper functions
-(function($$ , undefined) {//$$ is ace.helper
- $$.unCamelCase = function(str) {
-	return str.replace(/([a-z])([A-Z])/g, function(match, c1, c2){ return c1+'-'+c2.toLowerCase() })
- }
- $$.strToVal = function(str) {
-	var res = str.match(/^(?:(true)|(false)|(null)|(\-?[\d]+(?:\.[\d]+)?)|(\[.*\]|\{.*\}))$/i);
-
-	var val = str;
-	if(res) {
-		if(res[1]) val = true;
-		else if(res[2]) val = false;
-		else if(res[3]) val = null;	
-		else if(res[4]) val = parseFloat(str);
-		else if(res[5]) {
-			try { val = JSON.parse(str) }
-			catch (err) {}
-		}
-	}
-
-	return val;
- }
- $$.getAttrSettings = function(el, attr_list, prefix) {
-	var list_type = attr_list instanceof Array ? 1 : 2;
-	//attr_list can be Array or Object(key/value)
-	var prefix = prefix ? prefix.replace(/([^\-])$/ , '$1-') : '';
-	prefix = 'data-' + prefix;
-
-	var settings = {}
-	for(var li in attr_list) if(attr_list.hasOwnProperty(li)) {
-		var name = list_type == 1 ? attr_list[li] : li;
-		var attr_val, attr_name = $$.unCamelCase(name.replace(/[^A-Za-z0-9]{1,}/g , '-')).toLowerCase()
-
-		if( ! ((attr_val = el.getAttribute(prefix + attr_name))  ) ) continue;
-		settings[name] = $$.strToVal(attr_val);
-	}
-
-	return settings;
- }
-
- $$.scrollTop = function() {
-	return document.scrollTop || document.documentElement.scrollTop || document.body.scrollTop
- }
- $$.winHeight = function() {
-	return window.innerHeight || document.documentElement.clientHeight;
- }
- $$.redraw = function(elem, force) {
-	var saved_val = elem.style['display'];
-	elem.style.display = 'none';
-	elem.offsetHeight;
-	if(force !== true) {
-		elem.style.display = saved_val;
-	}
-	else {
-		//force redraw for example in old IE
-		setTimeout(function() {
-			elem.style.display = saved_val;
-		}, 10);
-	}
- }
-})(ace.helper);
+	
+	return aceReady
+	
+}));//jQuery document ready
